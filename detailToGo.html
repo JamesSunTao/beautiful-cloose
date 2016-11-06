@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		 <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/protact.css"/>
+		<title></title>
+	</head>
+	<style type="text/css">
+		.back_logo{
+			width: 10%;
+			height: 40%;
+			position: absolute;
+			top:30%;
+			left: 5%;
+		}
+		.warp{
+			width: 100%;
+			height: 150vh;
+			box-sizing: border-box;
+			padding: 0 2%;
+			position: absolute;
+			top: 10%;
+		}
+		.imgarr{
+			width: 100%;
+			height: 90%;
+		}
+		.imgarr img{
+			width: 100%;
+			height: 200px;
+		}
+		.imgInfo{
+			margin-top: 3%;
+			font-size:0.8rem ;
+			background: pink;
+		}
+	</style>
+	<body>
+		 <!-- 顶部固定栏 -->
+		 <div id="top">
+		 	 <img src="img/landing/top_logo.png" class="back_logo"/>
+		 	 <a href="lading.html"><img src="img/common/top_icon2.png" class="Top_icon1"/></a>
+		 	 <a href="login.html"><img src="img/common/top_icon1.png" class="Top_icon2"/></a>		    
+		 </div>
+		 <div class="warp">
+		 	<div class="imgarr">
+		 		<!--<img src="img/timo.jpg"/>-->
+		 	   <!--<img src="img/dog.jpg"/>
+		 	   <img src="img/img1.jpg"/>-->
+		 	</div>
+		 	 
+		 	  <div class="imgInfo">
+		 	  	
+		 	  </div>
+		 </div>
+	</body>
+	<!--<script src="js/protact.js" type="text/javascript"></script>-->
+	<script src="js/jquery-3.0.0.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	  //返回上一页
+		var back_logo = document.getElementsByClassName('back_logo')[0];
+		back_logo.onclick = function() {
+			window.history.back(-1);
+		}
+		
+		getinfo();
+		function  getinfo() {
+			$.ajax({				
+				url:"http://datainfo.duapp.com/shopdata/getGoods.php",
+				type:"get",
+				data:{goodsID:GetQueryString("goodsID")},
+				dataType:"jsonp",
+				success:function(data) {
+					console.log(data)
+					
+					$.each(data,function (i) {
+						console.log(eval(data[i].goodsBenUrl)[0])
+						for (var j=0;j<eval(data[0].goodsBenUrl).length;j++) {
+							var img = new Image();
+							img.src = eval(data[i].goodsBenUrl)[j];
+						   $('.imgarr').append(img);
+						}
+					   $('.imgInfo').html(data[i].detail);
+			
+					})		
+				
+				}
+			});
+		}
+		
+		
+			//获取URL参数的方法
+		function GetQueryString(name) {
+			//定义正则，用于获取相应的参数
+			var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+			//字符串截取，获取匹配参数的值
+			var r = window.location.search.substr(1).match(reg);
+			// 但会参数值
+			if(r!=null)return decodeURI(r[2]); return null;
+		} 
+	</script>
+</html>

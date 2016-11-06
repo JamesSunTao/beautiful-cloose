@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		 <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/protact.css"/>
+		<title></title>
+	</head>
+	<style type="text/css">
+		.back_logo{
+			width: 10%;
+			height: 40%;
+			position: absolute;
+			top:30%;
+			left: 5%;
+		}
+		#top h2{			
+			height: 50%;
+			text-align: center;
+			color: #fff;
+		    line-height: 10vh;
+		}
+		.warp{
+			width: 100%;
+			height: 90vh;
+			background: #f1eeee;
+			position: absolute;
+			top: 10%;
+		}
+		form{
+			width: 100%;
+			height: 62%;
+			box-sizing: border-box;
+			padding:5% 5% ;
+		}
+		form .oDiv{
+			width: 100%;
+			height: 35px;
+			box-sizing: border-box;
+			padding-left:2%;
+			background: #fff;
+			margin-bottom: 2%;
+			border-radius:6px ;
+			position: relative;
+		}
+		.oDiv .waring{
+			position: absolute;			
+			right: 2%;
+			bottom: 30%;
+			color: red;
+			font-size: 0.1rem;
+		}
+		form .text{
+			box-sizing: border-box;
+			width: 73%;
+			height: 32px;
+			padding:0 2%;		
+			margin-bottom: 3%;
+			outline: none;
+			font-size:1rem ;
+			border: none;
+		}					
+		.checkPass{
+			width: 25px;
+			height: 25px;
+			vertical-align: middle;
+		}
+		.readyRead{
+			color: deeppink;
+			font-size:0.8rem;		
+		}
+		.button{
+			width: 100%;
+			height: 50px;
+			background:#D00878;
+			border-radius:8px ;
+			color: #fff;
+			outline: none;
+			font-size:1.2rem;
+			text-align: center;
+			line-height: 50px;
+			margin-top:20px;
+		}
+		.noNall{
+			width: 100%;
+			font-size: 0.3rem;
+			color: red;
+			padding-left: 5%;
+		}
+			
+	</style>
+	<body>
+		 <!-- 顶部固定栏 -->
+		 <div id="top">
+		 	 <img src="img/landing/top_logo.png" class="back_logo"/>
+		 	 <h2>注册</h2>
+		 </div>
+		 <div class="warp">
+		 	<form action="" method="">	
+		 		<div class="oDiv">
+		 			账户名称:<input type="text" value=""  class="text" placeholder="请输入账户"/>
+		 		    <span class="waring"></span>
+		 		</div>
+		 		<div class="oDiv">
+		 			登录密码:<input type="password" value="" class="text" placeholder="请输入密码"/>
+		 		    <span class="waring"></span>
+		 		</div>
+		 	    <div class="oDiv">
+		 	    	    确认密码:<input type="password" value="" class="text" placeholder="请确认密码"/><br />
+		 	        <span class="waring"></span>
+		 	    </div>	
+		 	         <!-- 都为空时的警告 -->
+		 	          <span class="noNall"></span>
+		 	      <div class="" style="margin-top: 10%;">
+			 	      	<input type="checkbox" class="checkPass" name=""value=""/>
+			 		    <span class="readyRead">我已阅读并接受走秀网服务条款</span> 
+		 	      </div>		 					 		
+		 	    <div class="button">注册</div>		 	   		 	  
+		 	</form>		 	
+		 </div>
+	</body>
+	<script src="js/jquery-3.0.0.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	 //自动聚焦	
+		$('.text').eq(0).focus();		
+		$(function() {
+			back();
+			register();
+		})
+		
+		//返回上一页
+		function back() {
+			$(".back_logo").click(function() {
+				history.go(-1);
+			})
+		}
+	 
+	   //功能实现
+	   function register() {
+	   	    //点击注册按钮
+	   	    $(".button").click(function() {
+	   	    	    //获取三个输入框的值
+	   	    	    var username = $('.text').eq(0).val();
+	   	    	    var pwd1 = $('.text').eq(1).val();
+	   	    	    var pwd2 = $('.text').eq(2).val();
+	   	    	    //验证输入是否为空
+	   	    	    if (username=="" || pwd1=="" || pwd2=="") {
+	   	    	    	     $(".noNall").html("用户名或密码不能为空");
+	   	    	    } else{
+	   	    	    	   var setdata = {
+	   	    	    	   	status:"register",
+	   	    	    	   	userID:username,
+	   	    	    	   	password:pwd1	   	    	    	   	
+	   	    	    	   }	   	    	    	  
+	   	    	    	   //验证俩次密码是否一样 
+	   	    	    	   if(pwdTest(pwd1,pwd2)){
+	   	    	    	   	   //验证通过,请求
+	   	    	    	   	   getData(setdata);	   	    	    	   	   
+	   	    	    	   }else{
+	   	    	    	   	  //不一致	   	    	    	   	 
+	   	    	    	   	   $('.waring').eq(2).html("俩次密码不一致");
+	   	    	    	   }
+	   	    	    }	   	    	    
+	   	    })	   	    
+	   }
+//验证俩次是否一致
+	 function  pwdTest(pwd1,pwd2) {
+	 	 var rel = false;
+	 	 if (pwd1 === pwd2) {
+	 	 	rel = true;
+	 	 }
+	 	 return rel;
+	 }
+//向后台发送请求
+      function getData (setdata) {
+      	 $.get(" http://datainfo.duapp.com/shopdata/userinfo.php",setdata,function(data) {
+      	 	  if (data==0) {
+      	 	  	$('.waring').eq(0).html("已注册");
+      	 	  }else if (data==2) {
+      	 	  	$(".noNall").html("数据库报错"); 
+      	 	  }else{
+      	 	  	//成功跳转到登录页面
+      	 	  	window.location.href = "lading.html";     	 	  	
+      	 	  }
+      	 });
+      }
+	
+	</script>
+</html>

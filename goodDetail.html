@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		 <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/protact.css"/>
+		<title></title>
+	</head>
+	<style type="text/css">
+		.back_logo{
+			width: 10%;
+			height: 40%;
+			position: absolute;
+			top:30%;
+			left: 5%;
+		}
+		.warp{
+			width: 100%;
+			height: 90vh;
+			position: absolute;
+			top: 10%;
+		}
+		 .goodPic{
+		 	width: 100%;
+		 	height: 40%;
+		 }
+		 .content_p{
+		 	height: 30%;
+		 	box-sizing: border-box;
+		 	padding: 7% 3%;
+		 	background: #f1eeee;
+		 	font-size:1.2rem ;
+		 }
+		 .nowMoney{
+		 	color: #D00878;
+		 }
+		 .oldMoney{
+		 	margin-left: 3%;
+		 	text-decoration: line-through;
+		 }
+		 .View_Details{
+		 	width: 100%;
+		 	height: 20%;
+		 	/*background: cyan;*/
+		 	position: absolute;
+		 }
+		 .infoPic{
+		 	position: absolute;
+		 	width: 9%;
+		 	height: 25%;
+		 	top: 30%;
+		 	left: 5%;
+		 }
+		 .span1{
+		 	position: absolute;
+		 	width: 70%;
+		 	height: 20%;
+		 	top: 35%;
+		 	left: 20%;
+		 	font-size: 1.2rem;
+		 }
+		 .span2{
+		 	position: absolute;
+		 	right: 0;
+		 }
+		.gotodai{
+			width: 100%;
+			height: 10%;
+			background: gray;
+			position: absolute;
+			bottom: 0;
+		}
+		.gotodai .button{
+			width: 60%;
+			height: 90%;
+			background: #D00878;
+			position: absolute;
+			top: 5%;
+			left: 20%;
+			outline: none;
+			border-radius:8px ;
+			color: #fff;
+			text-align: center;
+			line-height: 9vh;
+		}
+	</style>
+	<body>
+		 <!-- 顶部固定栏 -->
+		 <div id="top">
+		 	 <img src="img/landing/top_logo.png" class="back_logo"/>	
+		 	 <a href="lading.html"><img src="img/common/top_icon2.png" class="Top_icon1"/></a>
+		 	 <a href="login.html"><img src="img/common/top_icon1.png" class="Top_icon2"/></a>		    
+		 </div>
+		 <div class="warp">
+		 	  <img src="" class="goodPic"/>
+		 	  <div class="content_p">
+		 	  <span class="picTitle">	韩都衣舍韩版2016秋装新款女装翻领绣花图案长袖衬衫</span>
+		 	  	<h5> <span class="nowMoney">￥260</span>
+		 	  	<span class="oldMoney">￥433</span></h5>
+		 	  	<h5>尺码：&nbsp;160/84A &nbsp;165/88A</h5>
+		 	  	<h5 >数量：<span class="hNum">1</span></h5>
+		 	  </div>
+		 	  <div class="View_Details" >
+		 	  	<!--<div class="tonext" goodsID='"+data[i].goodsID>
+		 	  		 <img src="img/index/info_bg.png" class="infoPic"/>
+		 	  	  <span class="span1">查看商品详情<span class="span2">></span></span>
+		 	  	</div>		 	  	 -->
+		 	  </div>
+		 	  <div class="gotodai">
+		 	  	   <div class="button">放入购物袋</div>
+		 	  </div>
+		 </div>
+	</body>
+	<script src="js/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	  //返回上一页
+		var back_logo = document.getElementsByClassName('back_logo')[0];
+		back_logo.onclick = function() {
+			window.history.back(-1);
+		}
+		
+		getgoodDetail();
+		function  getgoodDetail() {
+			$.ajax({				
+				url:"http://datainfo.duapp.com/shopdata/getGoods.php",
+				type:"get",
+				data:{goodsID:GetQueryString("goodsID")},
+				dataType:"jsonp",
+				success:function(data) {
+					console.log(data)
+					$.each(data,function (i) {
+						$discont = (data[i].discount==0)?1: data[i].discount*0.1;
+					    $dispri =parseInt(data[i].price/$discont);
+						$(".goodPic").attr('src',data[i].goodsListImg);
+						$(".picTitle").html(data[i].goodsName);
+						$(".nowMoney").html(data[i].price);
+						$(".oldMoney").html($dispri);
+						$(".hNum").html(data[i].buynumber);
+						
+			var nav = "<div class='tonext' goodsID='"+data[i].goodsID+"'>"+
+		 	  		        "<img src='img/index/info_bg.png' class='infoPic'/>"+
+		 	  	            "<span class='span1'>查看商品详情<span class='span2'>></span></span>"+
+		 	  	            "</div>	";
+                      $('.View_Details').append(nav);
+				      jump($('.tonext'));
+					})		
+				
+				}
+			});
+		}
+		
+		//获取URL参数的方法
+		function GetQueryString(name) {
+			//定义正则，用于获取相应的参数
+			var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+			//字符串截取，获取匹配参数的值
+			var r = window.location.search.substr(1).match(reg);
+			// 但会参数值
+			if(r!=null)return decodeURI(r[2]); return null;
+		} 
+		//跳转到商品介绍页面 		
+   	    function  jump(obj) {
+   	 	   obj.bind("click",function() {
+   	 		 window.location.href = "detailToGo.html?goodsID="+$(this).attr("goodsID");
+   	 	   })
+   	    }	
+		
+	</script>
+</html>

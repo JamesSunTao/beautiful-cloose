@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		 <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/protact.css"/>
+		<title></title>
+	</head>
+	<style type="text/css">
+		.back_logo{
+			width: 10%;
+			height: 40%;
+			position: absolute;
+			top:30%;
+			left: 5%;
+		}
+		.warp{
+			width: 100%;
+			height: 90vh;
+			/*background: greenyellow;*/
+			position: absolute;
+			top: 10%;
+		}
+		.search_ul{
+			width: 100%;
+			height: 150vh;
+			/*background: green;*/
+			box-sizing: border-box;
+			padding:2% 1% ;
+			list-style: none;
+		}
+		.search_ul li{
+			width: 48%;
+			height: 28%;
+			/*background: deeppink;*/
+			float: left;
+		}
+		.search_ul li:nth-child(2n){
+			float: right;
+		}
+		.search_ul li img{
+			width: 100%;
+			height: 78%;	
+		}
+		.search_ul li p{
+			font-size: 0.8rem;
+		}
+		.search_ul li span
+		{
+			color: red;
+			font-size: 0.5rem;
+		}
+		 .span2{
+		 	margin-left: 20%;
+		 }
+	</style>
+	<body>
+		 <!-- 顶部固定栏 -->
+		 <div id="top">
+		 	 <img src="img/landing/top_logo.png" class="back_logo"/>	
+		 	 <a href="lading.html"><img src="img/common/top_icon2.png" class="Top_icon1"/></a>
+		 	 <a href="login.html"><img src="img/common/top_icon1.png" class="Top_icon2"/></a>		    
+		 </div>
+		 <div class="warp">
+		 	  <ul class="search_ul">
+		 	  	
+		 	  	
+		 	  </ul>
+		 </div>
+	</body>
+	<script src="js/jquery-3.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	  //返回上一页
+		var back_logo = document.getElementsByClassName('back_logo')[0];
+		back_logo.onclick = function() {
+			window.history.back(-1);
+		}
+		
+		searchTo();
+		function searchTo(){
+			$.ajax({
+				type:"get",
+				url:" http://datainfo.duapp.com/shopdata/getGoods.php",
+				data:{classID:GetQueryString("classID")},
+				dataType:"jsonp",
+				success:function(data) {
+					console.log(data);
+					$.each(data, function(i) {
+						var nav = "<li  goodsID='"+data[i].goodsID+"'><img src='"+data[i].goodsListImg+"'/><p>"+data[i].goodsName+"</p><span>￥"+data[i].price+" <span class='span2'>￥1183</span></span></li>"
+					    $('.search_ul').append(nav);
+					    jump($('li'));
+					});
+					
+				}
+			});
+		}
+		
+		//获取URL参数的方法
+		function GetQueryString(name) {
+			//定义正则，用于获取相应的参数
+			var reg = new RegExp("(^|&)"+name+"=([^&]*)(&|$)");
+			//字符串截取，获取匹配参数的值
+			var r = window.location.search.substr(1).match(reg);
+			// 但会参数值
+			if(r!=null)return decodeURI(r[2]); return null;
+		} 
+		
+		//跳转到商品介绍页面 		
+   	 function  jump(obj) {
+   	 	obj.bind("click",function() {
+   	 		window.location.href = "goodDetail.html?goodsID="+$(this).attr("goodsID");
+   	 	})
+   	 
+   	 }	
+	</script>
+</html>
